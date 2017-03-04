@@ -1,0 +1,6 @@
+# swap files
+*.swp
+
+# spell files can be installed as needed
+*.spl
+

@@ -1,0 +1,3 @@
+[submodule "pack/packages/start/csv.vim"]
+	path = pack/packages/start/csv.vim
+	url = https://github.com/chrisbra/csv.vim
