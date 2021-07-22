@@ -1,3 +1,7 @@
 [submodule "pack/packages/start/csv.vim"]
 	path = pack/packages/start/csv.vim
 	url = https://github.com/chrisbra/csv.vim
+
+[submodule "pack/packages/start/calendar.vim"]
+	path = pack/packages/start/calendar.vim
+	url = https://github.com/itchyny/calendar.vim

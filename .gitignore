@@ -4,3 +4,9 @@
 # spell files can be installed as needed
 *.spl
 
+# cache, e.g. for vim calendar
+/cache
+
+# netrw
+/.netrwhist
+

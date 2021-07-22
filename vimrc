@@ -4,10 +4,11 @@
 set nocompatible
 "execute pathogen#infect()
 "packloadall
-syntax on
 filetype plugin indent on
+syntax on
 colorscheme elflord
 "}}}
+
 " calendar.vim {{{
 let g:calendar_locale = 'en'
 let g:calendar_date_endian = 'big'
@@ -16,6 +17,7 @@ let g:calendar_week_number = 1
 let g:calendar_frame = 'default'
 let g:calendar_cache_directory = expand('~/.vim/cache/calendar/')
 "}}}
+
 " common to all files {{{
 function! Marks()
   set listchars=eol:\|,tab:@>,trail:%
@@ -39,7 +41,7 @@ set shiftwidth=4
 set noshowmatch
 set matchpairs=(:),[:],{:},<:>
 set showbreak=+++\   " the \ escapes a space
-set iskeyword=@,48-57,@-@,_,-,.,192-255
+set iskeyword=@,48-57,@-@,_,-,192-255
 set foldlevelstart=1
 set encoding=utf-8
 
@@ -54,6 +56,7 @@ set noautowrite
 " works well on urxvt and xterm
 set mouse=a
 "}}}
+
 " colours and highlights {{{
 set noautoindent
 
@@ -67,16 +70,20 @@ endif
 "set showmatch
 "set smartcase
 
-match ErrorMsg '\%80c.'
+hi LongText term=standout ctermfg=15 ctermbg=1 guifg=White guibg=Red
+match LongText '\%80v.'
 set textwidth=79
 set modelines=6
+
 "}}}
+
 " commands {{{
 command! -nargs=1 -range Decr <line1>,<line2>s/\d\+/\=printf('%0*d',
   \ len(submatch(0)), submatch(0) - <args>)
 ":%!xxd     " hex editor
 ":%!xxd -r  " restore from hex
 "}}}
+
 " common mappings {{{
 let mapleader = '-'
 let maplocalleader = ','
@@ -122,14 +129,15 @@ function! RightSplit()
   if '' ==# bufname('#')
     echom 'No alternate buffer'
   else
-    execute "rightbelow vsplit" . bufname('#')
+    execute "rightbelow vsplit " . bufname('#')
   endif
 endfunction
 nnoremap <leader>sp :call RightSplit()<cr>
 
 " highlight trailing spaces
-nnoremap <leader>w :match ErrorMsg /\v\s+$/<cr>
-nnoremap <leader>W :match none<cr>
+nnoremap <leader>wt :match ErrorMsg /\v\s+$/<cr>
+nnoremap <leader>wl :match LongText /\%80v./<cr>
+nnoremap <leader>wc :match none<cr>
 
 " always used very magic
 nnoremap / /\v
@@ -163,7 +171,7 @@ function! QuickfixToogle()
 endfunction
 nnoremap <leader>q :call QuickfixToogle()<cr>
 
-" tab completion
+" tab completion: addon on ins-completion, prevent completion in first position
 let g:tab_completion_keys = "\<c-x>\<c-p>"
 function! TabCompletion()
   let l:col = max([col('.')-1, 1])
@@ -176,14 +184,15 @@ function! TabCompletion()
 endfunction
 inoremap <expr> <tab> TabCompletion()
 "}}}
+
 " spelling and abbreviations{{{
 function! Abbrev()
   iabbrev adn and
   iabbrev teh the
   iabbrev waht what
   iabbrev tehn then
-  iabbrev @@@ grochmal@member.fsf.org
-  iabbrev ccopy Copyright (C) 2016 Michal Grochmal
+  iabbrev @@@ NmiOke@gSroPchAmal.oMrg
+  iabbrev ccopy Copyright (C) Michal Grochmal
   iabbrev ssig -- <cr>Mike Grochmal<cr>key ID 0xC840C4F6
 endfunction
 
@@ -193,6 +202,7 @@ cabbrev h tab help
 
 " abclear  " removes abbreviations
 "}}}
+
 " status line {{{
 
 set laststatus=2
@@ -223,12 +233,14 @@ set statusline+={0x%B}
 set statusline+=%P
 
 "}}}
+
 " quickfix {{{
 "nnoremap <leader>g :silent execute "grep! -R "
 "  \. shellescape(expand('<cWORD>')) . " ."<cr>:7copen<cr><c-l>
 nnoremap <leader>cn :cnext<cr>
 nnoremap <leader>cp :cprevious<cr>
 "}}}
+
 " netrw {{{
 "
 " tree listing
@@ -251,6 +263,7 @@ let g:netrw_list_hide= '.*\.swp$'
 nnoremap <leader>l :Lexplore<cr>
 
 "}}}
+
 " skk {{{
 "set complete=s~/vim/skk/skk-jisyo-utf-8.l
 "let g:skk_jisyo = '~/vim/skk/priv.skk'
@@ -270,6 +283,7 @@ nnoremap <leader>l :Lexplore<cr>
 "  execute "source " . g:skk_script
 "endfunction
 "}}}
+
 " tabs {{{
 
 set showtabline=2
@@ -308,11 +322,12 @@ function! MyTabLabel(n)
   return bufname(buflist[winnr - 1])
 endfunction
 
+" }}}
+
 " Write a proper colorscheme someday
 "hi StatusLineNC term=bold,reverse cterm=bold,reverse gui=reverse
 "hi TabLineFill term=bold,reverse cterm=bold,reverse gui=bold,reverse
 "hi VertSplit term=bold,reverse cterm=bold,reverse gui=bold,reverse
-" }}}
 
 " vimscript {{{
 function! FtVim()
@@ -322,27 +337,35 @@ function! FtVim()
   iabbrev <buffer> ffun function
 endfunction
 "}}}
+
 " newrt {{{
 function! FtNetrw()
   setlocal nolist expandtab shiftwidth=2 softtabstop=2
 endfunction
 "}}}
+
 " python {{{
 function! FtPython()
   setlocal expandtab shiftwidth=4 softtabstop=4 autoindent
+  " comment line
   nnoremap <buffer> <localleader>c I#<esc>
+  " cut and produce condition
   nnoremap <buffer> <localleader>cc ^wC:<esc><left>i
   " runs visually marked code with vim's python
   vnoremap <localleader>p y:<c-r>"<c-b>python3 <cr>
   iabbrev <buffer> iff if:<left>
   iabbrev <buffer> yy yay
-  iabbrev <buffer> cc callit
-  iabbrev <buffer> nn nancallit
-  iabbrev <buffer> ww nancallit
-  iabbrev <buffer> uu unancallit
-  iabbrev <buffer> ii iunancallit
 endfunction
 "}}}
+
+" shell {{{
+function! FtShell()
+  setlocal expandtab shiftwidth=4 softtabstop=4 autoindent
+  " comment line
+  nnoremap <buffer> <localleader>c I#<esc>
+endfunction
+"}}}
+
 " c/cpp {{{
 function! FtC()
   setlocal noexpandtab shiftwidth=8
@@ -350,13 +373,15 @@ function! FtC()
   nnoremap <buffer> <localleader>c I/*<esc>A*/<esc>0
 endfunction
 "}}}
+
 " javascript {{{
 function! FtJavaScript()
-  setlocal expandtab shiftwidth=4 softtabstop=4 autoindent
+  setlocal expandtab shiftwidth=2 softtabstop=2 autoindent
   setlocal comments=sr:/*,mb:*,ex:*/,://
   nnoremap <buffer> <localleader>c I//<esc>
 endfunction
 "}}}
+
 " sql {{{
 function! FtSql()
   setlocal expandtab shiftwidth=2 softtabstop=2
@@ -364,6 +389,7 @@ function! FtSql()
   iabbrev <buffer> ssel select
 endfunction
 "}}}
+
 " java {{{
 function! FtJava()
   setlocal expandtab shiftwidth=4 softtabstop=4 autoindent
@@ -371,14 +397,13 @@ function! FtJava()
   iabbrev <buffer> iff if ()<left>
 endfunction
 "}}}
+
 " markdown {{{
 function! FtMarkdown()
-  setlocal makeprg=~/vim/mkmd.sh\ %
-  onoremap <buffer> ih :<c-u>execute "normal! ?^[=-]\\{2,}$\r:nohlsearch\rkvg_"<cr>
-  onoremap <buffer> ah :<c-u>execute "normal! ?^[=-]\\{2,}$\r:nohlsearch\rg_vk0"<cr>
-  iabbrev yay works
+  setlocal expandtab shiftwidth=4 softtabstop=4
 endfunction
 "}}}
+
 " xml/html {{{
 function! FtXml()
   setlocal expandtab shiftwidth=2 softtabstop=2
@@ -396,6 +421,7 @@ if has("autocmd")
     autocmd FileType vim call FtVim()
     autocmd FileType netrw call FtNetrw()
     autocmd FileType python call FtPython()
+    autocmd FileType sh call FtShell()
     autocmd FileType c,cpp call FtC()
     autocmd FileType javascript call FtJavaScript()
     autocmd FileType sql call FtSql()
@@ -406,87 +432,9 @@ if has("autocmd")
   augroup end
 endif
 " }}}
+
 " junk {{{
-"let g:toggleHighlightWhitespace = 1
-"function! ToggleHighlightWhitespace(...)
-  "if a:0 == 1 "toggle behaviour
-    "let g:toggleHighlightWhitespace = 1 - g:toggleHighlightWhitespace
-  "endif
-
-  "if g:toggleHighlightWhitespace == 1 "normal action, do the hi
-    "highlight ExtraWhitespace ctermbg=red guibg=red
-    "match ExtraWhitespace /\s\+$/
-    "augroup HighLightWhitespace
-    "autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-    "autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-    "autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-    "autocmd BufWinLeave * call clearmatches()
-    "augroup END
-  "else
-    "call clearmatches()
-    "autocmd! HighLightWhitespace BufWinEnter
-    "autocmd! HighLightWhitespace InsertEnter
-    "autocmd! HighLightWhitespace InsertLeave
-    "autocmd! HighLightWhitespace BufWinLeave
-  "endif
-"endfunction
-
-"autocmd BufWinEnter * call ToggleHighlightWhitespace()
-"autocmd BufWinLeave * call ToggleHighlightWhitespace()
-"nnoremap <leader>w :call ToggleHighlightWhitespace(1)<cr>
-
-"let b:match_words = 'if:endif,function:endfunction'
-"runtime macros/matchit.vim
-"let b:matchid = 0
-"function! MatchWord()
-  "let l:char = getline('.')[col('.')-1]
-  "if l:char =~# '[a-zA-Z]'
-    "let l:word = expand('<cword>')
-    "return l:word
-  "endif
-"endfunction
-"autocmd CursorMoved * echo MatchWord()
-
-"set iskeyword=@,48-57,_,-,.,192-255
-"let g:wordidx = 0
-"let g:word = ''
-"let g:match = 0
-"function! Suggest()
-"  let l:glob = globpath('application/migrations', '*.php')
-"  let l:files = map(split(l:glob), 'fnamemodify(v:val, ":t")')
-"  let l:char = getline('.')[col('.')-1]
-"  let l:word = ''
-"  let l:suggestions = []
-"  if l:char =~# '[a-zA-Z0-9_]'
-"    if g:word ==# ''
-"      let g:word = expand('<cword>')
-"      let g:match = matchadd('ErrorMsg', g:word)
-"    endif
-"    let l:word = g:word
-"    "let l:reg = '^' . l:word
-"    let l:suggestions = filter(l:files, 'v:val =~ l:word')
-"    if !empty(l:suggestions)
-"      call add(l:suggestions, l:word)
-"      "echo l:suggestions
-"      let l:change = l:suggestions[g:wordidx]
-"      let g:wordidx = (g:wordidx + 1) % len(l:suggestions)
-"      "echo g:wordidx + 10
-"      execute "normal! mqviwc" . l:change . "\<esc>`q"
-"    endif
-"  endif
-"  "echo [l:word, l:suggestions]
-"endfunction
-"
-"function! SuggestClear()
-"  call matchdelete(g:match)
-"  let g:wordidx = 0
-"  let g:word = ''
-"  let g:match = 0
-"endfunction
-"
-"nnoremap <leader><tab> :call Suggest()<cr>
-"nnoremap <leader><cr>  :call SuggestClear()<cr>
-" }}}
+" things that are only here as POCs
 
 let g:abook_prevbuf = 0
 let g:abook_buf = 0
@@ -538,6 +486,9 @@ augroup end
 
 nnoremap <leader>a :call MkAbook()<cr>
 
+"}}}
+
+" terminal sheaningans {{{
 "let &t_SI = "\<esc>[5 q"
 "let &t_SR = "\<esc>[5 q"
 "let &t_EI = "\<esc>[2 q"
@@ -547,6 +498,8 @@ nnoremap <leader>a :call MkAbook()<cr>
 "let &t_EI = "\<esc>[2 q"
 "au InsertEnter * silent execute "!echo -en \<esc>[5 q"
 "au InsertLeave * silent execute "!echo -en \<esc>[2 q"
+
+"}}}
 
 " load all packages so they overwrite the ones from the Vim distribution
 packloadall
