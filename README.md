@@ -19,7 +19,7 @@ And it is done, you can ignore the rest of the section.
 Using SSH is also a viable option, assuming you have github.com as a host in
 your SSH config file:
 
-    git clone https://github.com/grochmal/vimfiles ~/.vim
+    git clone ssh://github.com/grochmal/vimfiles ~/.vim
 
 And another mirror is available on gitlab.com.  You can condense the submodules
 into the same command as well.  I normally use the following when installing on
@@ -61,9 +61,9 @@ The LICENSE file contains a copy of the VIM LICENSE.
 Extensive status bar and highlighting of white space in files.  In order for a
 more vertical (easier to read) code the following is shown
 
-- each end of line is marked with a pipe symbol ( | ),
-- all tabs are marked as "@>>",
-- trailing space is explicitly shown as percentage signs ( % ).
+- each end of line is marked with a pipe symbol ( `|` ),
+- all tabs are marked as `@>>`,
+- trailing space is explicitly shown as percentage signs ( `%` ).
 
 This can be temporarily disabled with `:call Clear()` and re-enabled with
 `:call Marks()`.  You are free to add a `:command` to execute either.
