@@ -176,7 +176,7 @@ let g:tab_completion_keys = "\<c-x>\<c-p>"
 function! TabCompletion()
   let l:col = max([col('.')-1, 1])
   let l:char = matchstr(getline('.'), '\%' . l:col . 'c.')
-  if l:char =~# '\k'
+  if l:coli != 1 && l:char =~# '\k'
     return g:tab_completion_keys
   else
     return "\<tab>"
